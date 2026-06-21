@@ -1,0 +1,309 @@
+================================================================================
+  SOS FONT — Guide définitif pour les polices (Next.js + Tailwind)
+================================================================================
+
+Tu es sur Next.js 16 + Tailwind 4. Voici LA méthode qui marche à tous les coups.
+
+
+================================================================================
+  POURQUOI ÇA NE MARCHE PAS CHEZ TOI (ton cas actuel)
+================================================================================
+
+Dans layout.js tu mets bien Syne_Tactile sur <html> :
+
+  <html className={`${tactile.className} ...`}>
+
+MAIS dans globals.css tu as :
+
+  body {
+    font-family: Arial, Helvetica, sans-serif;  <-- ÇA ÉCRASE TOUT
+  }
+
+La police du <body> a priorité sur celle héritée du <html> pour le texte
+dans le body. Résultat : tu vois Arial, pas Syne Tactile.
+
+FIX IMMÉDIAT — supprime ou commente la ligne font-family dans globals.css :
+
+  body {
+    background: var(--background);
+    color: var(--foreground);
+    /* font-family: Arial...  <-- SUPPRIME ÇA */
+  }
+
+
+================================================================================
+  RÈGLE D'OR (à retenir une fois pour toutes)
+================================================================================
+
+  1. Charge la police UNE SEULE FOIS (layout.js)
+  2. Applique-la UNE SEULE FOIS (className ou variable CSS)
+  3. Ne la réécris JAMAIS ailleurs (pas de font-family en CSS sauf si voulu)
+  4. Ne mélange pas 3 méthodes en même temps
+
+Méthodes possibles :
+  A) next/font/google     → Google Fonts (recommandé)
+  B) next/font/local      → fichiers .woff2 sur ton disque
+  C) @font-face en CSS    → ancienne méthode, évite si tu es en Next.js
+
+
+================================================================================
+  MÉTHODE A — Google Fonts avec next/font/google (RECOMMANDÉ)
+================================================================================
+
+Étape 1 — Trouve le nom exact sur https://fonts.google.com
+  Exemple : "Syne" → import { Syne } from "next/font/google"
+  Exemple : "Roboto" → import { Roboto } from "next/font/google"
+  Exemple : "Open Sans" → import { Open_Sans } from "next/font/google"
+  (Les espaces deviennent des underscores _)
+
+Étape 2 — Configure dans src/app/layout.js
+
+  import { Syne } from "next/font/google";
+
+  const syne = Syne({
+    subsets: ["latin"],        // obligatoire pour les caractères latins
+    weight: ["400", "700"],    // si la police a plusieurs graisses
+    // weight: "400",          // si une seule graisse (ex: Syne Tactile)
+    variable: "--font-syne",  // optionnel : pour Tailwind / CSS custom
+  });
+
+Étape 3 — Applique sur <html> ou <body>
+
+  OPTION 1 — className (le plus simple) :
+    <html lang="fr" className={syne.className}>
+
+  OPTION 2 — variable CSS (pour Tailwind) :
+    <html lang="fr" className={syne.variable}>
+    Puis dans globals.css :
+      @theme inline {
+        --font-sans: var(--font-syne);
+      }
+
+Étape 4 — NE PAS réécraser dans globals.css
+
+  ❌ body { font-family: Arial... }
+  ✅ Laisse next/font gérer tout seul
+
+
+--- Exemple complet layout.js (Google Font) ---
+
+  import { Syne } from "next/font/google";
+  import "./globals.css";
+
+  const syne = Syne({
+    subsets: ["latin"],
+    weight: ["400", "700", "800"],
+    variable: "--font-syne",
+  });
+
+  export default function RootLayout({ children }) {
+    return (
+      <html lang="fr" className={`${syne.className} ${syne.variable}`}>
+        <body>{children}</body>
+      </html>
+    );
+  }
+
+
+--- Plusieurs polices Google en même temps ---
+
+  import { Syne, Geist_Mono } from "next/font/google";
+
+  const syne = Syne({ subsets: ["latin"], variable: "--font-syne" });
+  const mono = Geist_Mono({ subsets: ["latin"], variable: "--font-mono" });
+
+  <html className={`${syne.className} ${syne.variable} ${mono.variable}`}>
+
+  Puis pour le mono sur un élément :
+    <code className="font-mono">...</code>
+  (après avoir configuré --font-mono dans @theme, voir section Tailwind)
+
+
+--- Erreurs fréquentes Google Fonts ---
+
+  ❌ "Module not found" → mauvais nom d'import
+     "Open Sans" = Open_Sans, pas OpenSans
+
+  ❌ weight manquant → certaines polices exigent weight explicite
+     Syne_Tactile n'a QUE le poids 400 :
+       const tactile = Syne_Tactile({ subsets: ["latin"], weight: "400" });
+     Si tu mets weight: ["700"] sur une police qui n'a pas 700 → erreur build
+
+  ❌ subsets manquant → warning ou caractères manquants (é, à, ç...)
+     Toujours mettre subsets: ["latin"] minimum
+
+  ❌ Lien <link> Google dans <head> EN PLUS de next/font
+     → double chargement, conflits. Choisis UNE méthode.
+
+
+================================================================================
+  MÉTHODE B — Police locale avec next/font/local
+================================================================================
+
+Étape 1 — Place tes fichiers dans le projet
+  Structure recommandée :
+    public/fonts/
+      MaPolice-Regular.woff2
+      MaPolice-Bold.woff2
+  OU (mieux pour le bundling) :
+    src/fonts/
+      MaPolice-Regular.woff2
+      MaPolice-Bold.woff2
+
+  Format recommandé : .woff2 (le plus léger et moderne)
+  Convertir : https://cloudconvert.com/ttf-to-woff2
+
+Étape 2 — layout.js
+
+  import localFont from "next/font/local";
+
+  const maPolice = localFont({
+    src: [
+      {
+        path: "../fonts/MaPolice-Regular.woff2",  // depuis src/app/
+        weight: "400",
+        style: "normal",
+      },
+      {
+        path: "../fonts/MaPolice-Bold.woff2",
+        weight: "700",
+        style: "normal",
+      },
+    ],
+    variable: "--font-ma-police",
+  });
+
+  // OU un seul fichier :
+  const maPolice = localFont({
+    src: "../fonts/MaPolice.woff2",
+    variable: "--font-ma-police",
+  });
+
+Étape 3 — Applique comme Google Font
+
+  <html className={`${maPolice.className} ${maPolice.variable}`}>
+
+
+--- Chemin des fichiers : règle simple ---
+
+  layout.js est dans : src/app/layout.js
+  Police dans          : src/fonts/MaPolice.woff2
+  Chemin relatif       : "../fonts/MaPolice.woff2"
+
+  Police dans          : public/fonts/MaPolice.woff2
+  Chemin relatif       : "../../public/fonts/MaPolice.woff2"
+  (mais préfère src/fonts/ — Next optimise mieux)
+
+
+================================================================================
+  MÉTHODE C — @font-face en CSS (si tu n'utilises PAS next/font)
+================================================================================
+
+  @font-face {
+    font-family: "MaPolice";
+    src: url("/fonts/MaPolice.woff2") format("woff2");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  body {
+    font-family: "MaPolice", sans-serif;
+  }
+
+  Fichier dans : public/fonts/MaPolice.woff2
+  URL          : /fonts/MaPolice.woff2
+
+  ⚠️ En Next.js, préfère next/font/local : pas de FOUT, auto-preload,
+     pas de chemin cassé au build.
+
+
+================================================================================
+  INTÉGRATION TAILWIND 4 (ton setup actuel)
+================================================================================
+
+Tu as Tailwind 4 avec @theme inline dans globals.css.
+
+Pour connecter une variable next/font à Tailwind :
+
+  // layout.js
+  const syne = Syne({
+    subsets: ["latin"],
+    variable: "--font-syne",
+  });
+  <html className={syne.variable}>
+
+  // globals.css
+  @import "tailwindcss";
+
+  @theme inline {
+    --font-sans: var(--font-syne);   /* font-sans en Tailwind */
+    --font-mono: var(--font-geist-mono);
+  }
+
+Ensuite dans tes composants :
+  <p className="font-sans">Texte en Syne</p>
+  <code className="font-mono">code</code>
+
+IMPORTANT : si tu utilises syne.className sur <html>, font-sans Tailwind
+n'est pas obligatoire — className suffit pour tout le site.
+
+
+================================================================================
+  CHECKLIST DEBUG — "Ma police ne s'affiche pas"
+================================================================================
+
+  [ ] DevTools → Inspecter un texte → Computed → font-family
+      Quelle police est réellement appliquée ?
+
+  [ ] globals.css écrase-t-il avec font-family: Arial/system ?
+
+  [ ] La police est-elle sur <html> ou <body> (pas seulement importée) ?
+
+  [ ] className est-il bien passé ? (${font.className} pas oublié)
+
+  [ ] weight correct pour cette police Google ?
+
+  [ ] subsets: ["latin"] présent ?
+
+  [ ] Redémarrer le serveur dev après changement de font
+      (Ctrl+C puis npm run dev)
+
+  [ ] Vider le cache navigateur ou hard refresh (Ctrl+Shift+R)
+
+  [ ] Pas de <link href="fonts.googleapis.com"> en double dans layout
+
+
+================================================================================
+  TON layout.js — VERSION CORRIGÉE (exemple)
+================================================================================
+
+  import { Syne_Tactile } from "next/font/google";
+  import "./globals.css";
+
+  const tactile = Syne_Tactile({
+    subsets: ["latin"],
+    weight: "400",   // Syne Tactile n'a que 400
+  });
+
+  export default function RootLayout({ children }) {
+    return (
+      <html lang="fr" className={`${tactile.className} antialiased`}>
+        <body className="min-h-full flex flex-col">{children}</body>
+      </html>
+    );
+  }
+
+  + Supprimer font-family dans globals.css body { }
+
+
+================================================================================
+  RÉSUMÉ EN 4 LIGNES
+================================================================================
+
+  Google  → import { Nom } from "next/font/google" → className sur <html>
+  Local   → import localFont from "next/font/local" → className sur <html>
+  Tailwind→ variable: "--font-xxx" + @theme --font-sans: var(--font-xxx)
+  Jamais  → font-family hardcodé dans CSS qui contredit next/font
+
+================================================================================
