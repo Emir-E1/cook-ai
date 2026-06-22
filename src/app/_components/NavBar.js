@@ -1,3 +1,5 @@
+"use client";
+
 import Logo from "./Logo";
 
 import {
@@ -15,7 +17,7 @@ function NavBar() {
   ];
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 px-6 py-4 md:px-36 md:py-4 grid grid-cols-2 md:grid-cols-3 items-center w-full bg-background/70 backdrop-blur-md border-b border-secondary/5">
+    <header className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[90%] max-w-[1200px] px-6 py-4 md:px-12 grid grid-cols-2 md:grid-cols-3 items-center bg-background/70 backdrop-blur-md border border-secondary/5 rounded-full">
       <div className="flex justify-start md:justify-center">
         <Logo />
       </div>

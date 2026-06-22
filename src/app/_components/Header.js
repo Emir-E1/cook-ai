@@ -2,14 +2,14 @@ import { Separator } from "@/components/ui/separator";
 
 function Header({ title, sub }) {
   return (
-    <div className="flex items-center gap-7">
+    <div className="flex flex-col md:flex-row items-center text-center gap-3 md:gap-7">
       <h2>{title}</h2>
-      <div className="relative w-20 h-20 flex items-center justify-center">
-        <Separator
-          className={"bg-secondary rotate-45"}
-          orientation="vertical"
-        />
-      </div>
+
+      <Separator
+        orientation="vertical"
+        className="hidden md:block h-12 rotate-45 bg-secondary"
+      />
+
       <p className="text-body">{sub}</p>
     </div>
   );

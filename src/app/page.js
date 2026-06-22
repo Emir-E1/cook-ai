@@ -1,6 +1,8 @@
+import Benefits from "./_pages/Benefits";
 import Demo from "./_pages/Demo";
 import Hero from "./_pages/Hero";
 import Works from "./_pages/Works";
+import Recipes from "./_pages/Recipes";
 
 export default function Home() {
   return (
@@ -8,6 +10,8 @@ export default function Home() {
       <Hero />
       <Demo />
       <Works />
+      <Benefits />
+      <Recipes />
     </div>
   );
 }
