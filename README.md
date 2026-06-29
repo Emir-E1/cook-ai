@@ -1,37 +1,86 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Cook AI
+
+Cook AI is a modern AI-powered web application built with Next.js, Tailwind CSS, shadcn/ui, and Framer Motion. The application is designed to help users generate recipes, discover meal ideas, and simplify meal planning through an intuitive and responsive user interface.
+
+**Note:** This repository currently contains the front-end implementation only. AI services and backend functionality are planned for future development.
+
+---
+
+## Features
+
+- AI-inspired recipe generation interface
+- Meal planning experience
+- Modern and responsive design
+- Smooth page and component animations
+- Clean and accessible user interface
+
+---
+
+## Tech Stack
+
+- Next.js
+- React
+- Tailwind CSS
+- shadcn/ui
+- Framer Motion
+
+---
 
 ## Getting Started
 
-First, run the development server:
+### Clone the repository
+
+```bash
+git clone https://github.com/emir-e1/cook-ai.git
+```
+
+### Install dependencies
+
+```bash
+npm install
+```
+
+### Start the development server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The application will be available at:
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+```
+http://localhost:3000
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## Project Structure
 
-To learn more about Next.js, take a look at the following resources:
+```
+app/
+components/
+public/
+styles/
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Screenshots
 
-## Deploy on Vercel
+### Home Page
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+![Home Page](./public/screenshots/home.png)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-# Cook.Ai
+### Recipe Generator
+
+![Recipe Generator](./public/screenshots/recipe-generator.png)
+
+### Meal Planner
+
+![Meal Planner](./public/screenshots/meal-planner.png)
+
+---
+
+## License
+
+This project is licensed under the MIT License.

@@ -7,6 +7,7 @@ import Testimonials from "./_pages/Testimonials";
 import Pricing from "./_pages/Pricing";
 import Insights from "./_pages/Insights";
 import Faq from "./_pages/Faq";
+import Assistance from "./_pages/Assistance";
 
 export default function Home() {
   return (
@@ -20,6 +21,7 @@ export default function Home() {
       <Pricing />
       <Insights />
       <Faq />
+      <Assistance />
     </div>
   );
 }

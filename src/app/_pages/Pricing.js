@@ -21,10 +21,6 @@ function Pricing() {
       <Carousel className="w-full md:hidden">
         <CarouselContent className="items-stretch">
           <CarouselItem className="basis-[90%] flex">
-            <PricingVisualCard />
-          </CarouselItem>
-
-          <CarouselItem className="basis-[90%] flex">
             <PricingCard plan="premium" />
           </CarouselItem>
 
