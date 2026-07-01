@@ -1,2 +1,2 @@
 :HL["/cook-ai/_next/static/css/899c81d011589db6.css","style"]
-0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}},"staleTime":300,"buildId":"hLP3-eng-Zn4wpkTY2XQ0"}
+0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}},"staleTime":300,"buildId":"1JF6tLSlczWw7yYSwoVN9"}
